@@ -22,7 +22,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily:
-      'var(--font-fredoka, "Fredoka"), "Arial Rounded MT Bold", "Noto Sans", "Open Sans", Helvetica, sans-serif',
+      'var(--font-fredoka, "Fredoka"), "Arial Rounded MT Bold", var(--font-noto-sans, "Noto Sans"), var(--font-open-sans, "Open Sans"), Helvetica, sans-serif',
     h1: { fontWeight: 600 },
     h2: { fontWeight: 600 },
     h3: { fontWeight: 600 },
