@@ -25,6 +25,7 @@
     "@neondatabase/serverless": "1.2.0",
     "@prisma/adapter-neon": "7.10.0",
     "@prisma/client": "7.10.0",
+    "@tsuki-media/ui": "workspace:*",
     "better-auth": "^1.7.7",
     "next": "16.3.8",
     "notistack": "3.0.2",

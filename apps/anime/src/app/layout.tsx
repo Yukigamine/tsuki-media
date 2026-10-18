@@ -1,12 +1,17 @@
 import { Box } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fredoka, Geist_Mono } from "next/font/google";
 import Footer from "@/components/footer";
 import NavBar from "@/components/NavBar";
 import Providers from "@/components/Providers";
 import { metadata } from "./metadata";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
+  subsets: ["latin"],
+  display: "swap",
+  adjustFontFallback: false,
+});
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -21,7 +26,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${fredoka.variable} ${geistMono.variable}`}
     >
       <body>
         <InitColorSchemeScript attribute="class" defaultMode="system" />
