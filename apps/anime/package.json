@@ -45,7 +45,7 @@
     "dotenv": "18.0.5",
     "esbuild": "0.28.2",
     "graphql-zeus": "7.2.1",
-    "knip": "6.39.0",
+    "knip": "6.40.0",
     "server-only": "0.0.1",
     "serwist": "9.5.13",
     "tsx": "4.23.15",
