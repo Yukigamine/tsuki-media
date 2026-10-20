@@ -42,7 +42,7 @@
     "@types/node": "26.6.4",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "dotenv": "18.0.5",
+    "dotenv": "18.0.6",
     "esbuild": "0.28.2",
     "graphql-zeus": "7.2.1",
     "knip": "6.40.0",
