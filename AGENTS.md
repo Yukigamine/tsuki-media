@@ -10,5 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## README updates
 
-- README files are for tech stack details only, not feature lists or feature documentation.
-- Before updating a README, ask the user for approval and explain exactly what will change and why.
+- Keep README documentation focused on the project introduction and practical technical onboarding: tech stack, prerequisites, getting started, scripts, and necessary configuration guidance.
+- Preserve useful existing content; avoid verbose feature catalogues and redundant runbooks.
+- When an environment example file exists, link to it as the variable-list source of truth and document only non-obvious setup details in the README.
+- Before updating a README, ask the user for approval and explain what will change and why.
