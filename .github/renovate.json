@@ -1,43 +1,28 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "minimumReleaseAge": "14 days",
   "packageRules": [
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "rangeStrategy": "pin"
     },
     {
-      "matchManagers": [
-        "github-actions"
-      ],
+      "matchManagers": ["github-actions"],
       "rangeStrategy": "replace"
     },
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
     {
-      "matchPackageNames": [
-        "@biomejs/biome"
-      ],
+      "matchPackageNames": ["@biomejs/biome"],
       "postUpgradeTasks": {
         "commands": [
           "pnpm dlx @biomejs/biome@{{{newVersion}}} migrate --write",
           "pnpm dlx @biomejs/biome@{{{newVersion}}} check --write"
         ],
-        "fileFilters": [
-          "**/*"
-        ],
+        "fileFilters": ["**/*"],
         "executionMode": "branch"
       }
     }
@@ -49,14 +34,10 @@
     "dependencyDashboardApproval": false,
     "prCreation": "immediate",
     "vulnerabilityFixStrategy": "lowest",
-    "labels": [
-      "security"
-    ],
+    "labels": ["security"],
     "automerge": false,
     "automergeType": "pr",
     "platformAutomerge": false,
-    "reviewers": [
-      "Yukigamine"
-    ]
+    "reviewers": ["Yukigamine"]
   }
 }
