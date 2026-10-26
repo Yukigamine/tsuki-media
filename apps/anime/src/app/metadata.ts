@@ -1,16 +1,13 @@
-import type { Metadata } from "next";
+import { createPwaMetadata, pwaViewport } from "@tsuki-media/ui/pwa";
 
-export const metadata: Metadata = {
-  title: "Tsuki Anime",
-  applicationName: "Tsuki Anime",
-  description: "Personal anime and manga tracking",
-  generator: "Next.js",
-  formatDetection: {
-    telephone: false,
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Tsuki Anime",
-  },
+const origin =
+  process.env.NEXT_PUBLIC_APP_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
+export const metadata = {
+  ...createPwaMetadata("anime", origin),
+  formatDetection: { telephone: false },
 };
+export const viewport = pwaViewport;

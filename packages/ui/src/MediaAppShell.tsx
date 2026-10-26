@@ -8,6 +8,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import type { PropsWithChildren } from "react";
 import { ColorModeButton } from "./Providers";
 
@@ -20,6 +21,12 @@ export function MediaAppShell({ title, children }: Props) {
     <Box sx={{ minHeight: "100dvh" }}>
       <AppBar position="static">
         <Toolbar sx={{ gap: 1 }}>
+          <Image
+            src="/icons/tsuki/squirlecon.svg"
+            alt=""
+            width={40}
+            height={40}
+          />
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             {title}
           </Typography>

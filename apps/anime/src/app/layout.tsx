@@ -12,6 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export { viewport } from "./metadata";
 export { metadata };
 
 export default function RootLayout({

@@ -1,10 +1,6 @@
 import { MediaAppShell, MediaProviders } from "@tsuki-media/ui";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Tsuki Books",
-  description: "A personal book collection powered by Hardcover",
-};
+export { metadata, viewport } from "./metadata";
 
 export default function RootLayout({
   children,
