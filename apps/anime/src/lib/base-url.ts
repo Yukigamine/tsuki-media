@@ -17,6 +17,11 @@ function normalizeBaseUrl(value: string): string {
  * Matches the Vercel-first strategy used in nostalgia-safety.
  */
 export function getServerBaseUrl(): string {
+  if (process.env.VERCEL_ENV === "preview") {
+    const previewUrl = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
+    if (previewUrl) return normalizeBaseUrl(previewUrl);
+  }
+
   if (process.env.NEXT_PUBLIC_CUSTOM_DOMAIN) {
     return normalizeBaseUrl(process.env.NEXT_PUBLIC_CUSTOM_DOMAIN);
   }
@@ -40,20 +45,25 @@ export function getServerBaseUrl(): string {
   return "http://localhost:3000";
 }
 
-/**
- * Browser-safe base URL resolution for Better Auth client calls.
- */
+/** Stable origin registered with OAuth providers. */
+export function getProductionBaseUrl(): string {
+  return normalizeBaseUrl(
+    process.env.BETTER_AUTH_PRODUCTION_URL || "https://anime.yukigamine.net",
+  );
+}
+
+/** Browser-safe base URL resolution for Better Auth client calls. */
 export function getClientBaseUrl(): string {
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return normalizeBaseUrl(window.location.origin);
+  }
+
   if (process.env.NEXT_PUBLIC_CUSTOM_DOMAIN) {
     return normalizeBaseUrl(process.env.NEXT_PUBLIC_CUSTOM_DOMAIN);
   }
 
   if (process.env.NEXT_PUBLIC_APP_URL) {
     return normalizeBaseUrl(process.env.NEXT_PUBLIC_APP_URL);
-  }
-
-  if (typeof window !== "undefined" && window.location?.origin) {
-    return normalizeBaseUrl(window.location.origin);
   }
 
   return "http://localhost:3000";
