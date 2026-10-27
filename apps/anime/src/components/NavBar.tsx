@@ -130,7 +130,7 @@ export default function NavBar() {
         <Toolbar>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1, mr: 3 }}>
             <Image
-              src="/icons/tsuki/squirlecon.svg"
+              src="/icons/tsuki/favicon.svg"
               alt="Tsuki Anime"
               width={48}
               height={48}

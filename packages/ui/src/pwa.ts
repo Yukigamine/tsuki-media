@@ -20,11 +20,13 @@ export function createPwaMetadata(app: App, origin: string): Metadata {
     manifest: "/manifest.webmanifest",
     icons: {
       icon: [
+        { url: `${asset}/pwa-192.png`, type: "image/png", sizes: "192x192" },
+        { url: `${asset}/pwa-512.png`, type: "image/png", sizes: "512x512" },
         { url: `${asset}/favicon.svg`, type: "image/svg+xml", sizes: "any" },
       ],
       apple: [
         {
-          url: `${asset}/apple-touch-icon.png`,
+          url: "/apple-touch-icon.png",
           sizes: "180x180",
           type: "image/png",
         },

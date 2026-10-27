@@ -121,6 +121,12 @@ for (const app of apps) {
     .removeAlpha()
     .png(png)
     .toFile(path.join(output, "apple-touch-icon.png"));
+  // Also serve Apple's conventional root path for clients that discover icons
+  // without reading the explicit link. Keep one opaque PNG for every appearance.
+  await fs.copyFile(
+    path.join(output, "apple-touch-icon.png"),
+    path.join(root, "apps", app, "public/apple-touch-icon.png"),
+  );
   for (const size of [512, 1024])
     await sharp(maskable(favicon.toString(), size))
       .removeAlpha()
