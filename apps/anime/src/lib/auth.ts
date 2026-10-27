@@ -93,7 +93,7 @@ export const auth = betterAuth({
     ...(customOAuthPlugin ? [customOAuthPlugin] : []),
     oAuthProxy({
       productionURL: PRODUCTION_URL,
-      secret: process.env.BETTER_AUTH_OAUTH_PROXY_SECRET,
+      secret: process.env.BETTER_AUTH_OAUTH_PROXY_SECRET?.trim() || undefined,
     }),
   ],
 
