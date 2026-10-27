@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "minimumReleaseAge": "14 days",
+  "baseBranchPatterns": ["develop", "main"],
   "packageRules": [
     {
       "matchManagers": ["npm"],
@@ -12,6 +13,7 @@
       "rangeStrategy": "replace"
     },
     {
+      "matchBaseBranches": ["develop"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
@@ -31,6 +33,12 @@
       "matchUpdateTypes": ["minor"],
       "automerge": false,
       "reviewers": ["Yukigamine"]
+    },
+    {
+      "description": "Keep ordinary updates on develop; production receives vulnerability fixes only.",
+      "matchBaseBranches": ["main"],
+      "matchPackageNames": ["*"],
+      "enabled": false
     }
   ],
   "osvVulnerabilityAlerts": true,
