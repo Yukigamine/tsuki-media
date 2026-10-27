@@ -26,5 +26,18 @@
         "executionMode": "branch"
       }
     }
-  ]
+  ],
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "minimumReleaseAge": null,
+    "dependencyDashboardApproval": false,
+    "prCreation": "immediate",
+    "vulnerabilityFixStrategy": "lowest",
+    "labels": ["security"],
+    "automerge": false,
+    "automergeType": "pr",
+    "platformAutomerge": false,
+    "reviewers": ["Yukigamine"]
+  }
 }
