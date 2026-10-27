@@ -42,7 +42,7 @@ services:
       - media-network
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     container_name: tsuki-media-cache
     env_file: .env
     ports:
