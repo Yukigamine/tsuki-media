@@ -25,6 +25,12 @@
         "fileFilters": ["**/*"],
         "executionMode": "branch"
       }
+    },
+    {
+      "matchBaseBranches": ["main"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": false,
+      "reviewers": ["Yukigamine"]
     }
   ],
   "osvVulnerabilityAlerts": true,
