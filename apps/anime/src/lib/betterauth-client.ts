@@ -5,5 +5,8 @@ import { getClientBaseUrl } from "@/lib/base-url";
 
 export const authClient = createAuthClient({
   baseURL: getClientBaseUrl(),
-  plugins: [InferServerPlugin<typeof auth, "generic-oauth">(), usernameClient()],
+  plugins: [
+    InferServerPlugin<typeof auth, "generic-oauth">(),
+    usernameClient(),
+  ],
 });
