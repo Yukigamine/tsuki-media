@@ -40,6 +40,15 @@ const theme = createTheme({
   },
   shape: { borderRadius: 10 },
   components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: ({ theme }) =>
+          theme.applyStyles("light", {
+            backgroundColor: "#35225c",
+            color: "#ffffff",
+          }),
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: {
         "button, input, select, textarea": { fontFamily: "inherit" },
