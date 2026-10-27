@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./theme": "./src/theme.ts"
+    "./theme": "./src/theme.ts",
+    "./pwa": "./src/pwa.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

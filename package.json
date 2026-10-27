@@ -40,7 +40,8 @@
     "db-edit": "pnpm --filter @tsuki-media/anime db-edit",
     "db-init": "pnpm --filter @tsuki-media/anime db-init",
     "zeus:kitsu": "pnpm --filter @tsuki-media/anime zeus:kitsu",
-    "zeus:anilist": "pnpm --filter @tsuki-media/anime zeus:anilist"
+    "zeus:anilist": "pnpm --filter @tsuki-media/anime zeus:anilist",
+    "branding:generate": "node scripts/generate-branding.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",

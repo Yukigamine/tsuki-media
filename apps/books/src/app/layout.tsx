@@ -1,6 +1,5 @@
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { MediaAppShell, MediaProviders } from "@tsuki-media/ui";
-import type { Metadata } from "next";
 import { Fredoka, Noto_Sans, Open_Sans } from "next/font/google";
 
 const notoSans = Noto_Sans({
@@ -23,10 +22,7 @@ const fredoka = Fredoka({
   adjustFontFallback: false,
 });
 
-export const metadata: Metadata = {
-  title: "Tsuki Books",
-  description: "A personal book collection powered by Hardcover",
-};
+export { metadata, viewport } from "./metadata";
 
 export default function RootLayout({
   children,

@@ -16,5 +16,7 @@ export const { dynamic, dynamicParams, revalidate, generateStaticParams, GET } =
   createSerwistRoute({
     additionalPrecacheEntries: [{ url: "/~offline", revision }],
     swSrc: "src/app/sw.ts",
+    // Apple selects one device-specific startup image; do not precache them all.
+    globIgnores: ["**/icons/tsuki/startup/**"],
     useNativeEsbuild: true,
   });

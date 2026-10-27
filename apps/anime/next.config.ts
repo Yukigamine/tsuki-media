@@ -28,6 +28,7 @@ const nextConfig: NextConfig = {
     root: path.resolve(import.meta.dirname, "../.."),
   },
   reactStrictMode: true,
+  transpilePackages: ["@tsuki-media/ui"],
   trailingSlash: false,
   images: {
     remotePatterns: [
