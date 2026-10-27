@@ -79,7 +79,8 @@ export function createPwaManifest(app: App): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     orientation: "any",
-    background_color: "#100629",
+    // Match the opaque canvas in both regular and maskable Android icons.
+    background_color: "#825aff",
     theme_color: "#100629",
     icons: [
       {
