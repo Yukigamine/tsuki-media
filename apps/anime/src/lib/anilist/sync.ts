@@ -6,6 +6,7 @@ import {
   invalidateAnimeTitleCache,
   invalidateMangaTitleCache,
 } from "@/lib/redis";
+import { getSettings } from "@/lib/settings";
 import {
   selectTitleFromAniList,
   validateAnimeListEntry,
@@ -564,9 +565,11 @@ async function pullMangaItem(item: AniListListItem): Promise<boolean> {
 // ---------------------------------------------------------------------------
 
 export async function pullAniList(logId: string): Promise<void> {
-  const tokenInfo = await getToken("ANILIST");
-  const username =
-    tokenInfo?.username ?? process.env.NEXT_PUBLIC_ANILIST_USERNAME ?? "";
+  const [tokenInfo, settings] = await Promise.all([
+    getToken("ANILIST"),
+    getSettings(),
+  ]);
+  const username = tokenInfo?.username ?? settings.anilistUsername;
 
   if (!username) throw new Error("No AniList username configured");
 
@@ -1132,12 +1135,14 @@ function buildDeleteBatch(ops: DeleteOp[]): {
 }
 
 export async function pushAniList(logId: string): Promise<void> {
-  const tokenInfo = await getToken("ANILIST");
+  const [tokenInfo, settings] = await Promise.all([
+    getToken("ANILIST"),
+    getSettings(),
+  ]);
   if (!tokenInfo?.accessToken)
     throw new Error("Not logged in to AniList — cannot push");
 
-  const username =
-    tokenInfo.username ?? process.env.NEXT_PUBLIC_ANILIST_USERNAME ?? "";
+  const username = tokenInfo.username ?? settings.anilistUsername;
   if (!username) throw new Error("No AniList username configured");
   const accessToken = tokenInfo.accessToken;
 

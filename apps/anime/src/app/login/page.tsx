@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { LoginProvider } from "@/components/LoginForm";
 import LoginForm from "@/components/LoginForm";
 import { getSession } from "@/lib/session";
+import { getSettings } from "@/lib/settings";
 
 export const metadata: Metadata = { title: "Sign in– Tsuki Anime" };
 
@@ -20,9 +21,14 @@ export default async function LoginPage() {
     redirect("/logout");
   }
 
+  const settings = await getSettings();
   const providers: LoginProvider[] = [];
 
-  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  if (
+    settings.authProvider === "google" &&
+    process.env.GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_SECRET
+  ) {
     providers.push({
       id: "google",
       label: "Google",
@@ -31,7 +37,11 @@ export default async function LoginPage() {
       iconUrl: null,
     });
   }
-  if (process.env.DISCORD_CLIENT_ID && process.env.DISCORD_CLIENT_SECRET) {
+  if (
+    settings.authProvider === "discord" &&
+    process.env.DISCORD_CLIENT_ID &&
+    process.env.DISCORD_CLIENT_SECRET
+  ) {
     providers.push({
       id: "discord",
       label: "Discord",
@@ -40,7 +50,11 @@ export default async function LoginPage() {
       iconUrl: null,
     });
   }
-  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+  if (
+    settings.authProvider === "github" &&
+    process.env.GITHUB_CLIENT_ID &&
+    process.env.GITHUB_CLIENT_SECRET
+  ) {
     providers.push({
       id: "github",
       label: "GitHub",
@@ -49,7 +63,11 @@ export default async function LoginPage() {
       iconUrl: null,
     });
   }
-  if (process.env.TWITTER_CLIENT_ID && process.env.TWITTER_CLIENT_SECRET) {
+  if (
+    settings.authProvider === "twitter" &&
+    process.env.TWITTER_CLIENT_ID &&
+    process.env.TWITTER_CLIENT_SECRET
+  ) {
     providers.push({
       id: "twitter",
       label: "Twitter / X",
@@ -59,6 +77,7 @@ export default async function LoginPage() {
     });
   }
   if (
+    settings.authProvider === "oauth" &&
     process.env.CUSTOM_OAUTH_CLIENT_ID &&
     process.env.CUSTOM_OAUTH_CLIENT_SECRET
   ) {
@@ -71,5 +90,10 @@ export default async function LoginPage() {
     });
   }
 
-  return <LoginForm providers={providers} />;
+  return (
+    <LoginForm
+      providers={providers}
+      credentials={settings.authProvider === "credentials"}
+    />
+  );
 }

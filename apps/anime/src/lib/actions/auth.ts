@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { persistKitsuToken } from "@/lib/kitsu/auth";
 import { deleteToken, getToken } from "@/lib/provider-links";
 import { getSession, requireSession } from "@/lib/session";
+import { getSettings } from "@/lib/settings";
 import type { ActionResult, SyncProvider } from "./types";
 
 type SaveKitsuTokenInput = {
@@ -24,7 +25,7 @@ export async function saveKitsuTokenAction(
     return { ok: false, error: "Invalid token payload" };
   }
 
-  const requiredUsername = process.env.NEXT_PUBLIC_KITSU_USERNAME;
+  const { kitsuUsername: requiredUsername } = await getSettings();
 
   try {
     const { username } = await persistKitsuToken({

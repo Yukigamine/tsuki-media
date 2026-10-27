@@ -9,6 +9,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from "@mui/icons-material/Settings";
 import SyncIcon from "@mui/icons-material/Sync";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import {
@@ -260,6 +261,23 @@ export default function NavBar() {
               {session && (
                 <Button
                   component={Link}
+                  href="/settings"
+                  prefetch={false}
+                  startIcon={<SettingsIcon fontSize="small" />}
+                  color={isActive("/settings") ? "primary" : "inherit"}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: isActive("/settings") ? 700 : 400,
+                    mr: 0.5,
+                  }}
+                >
+                  Settings
+                </Button>
+              )}
+
+              {session && (
+                <Button
+                  component={Link}
                   href="/sync"
                   prefetch={false}
                   startIcon={<SyncIcon fontSize="small" />}
@@ -380,6 +398,21 @@ export default function NavBar() {
             </ListItemIcon>
             <ListItemText primary="About" />
           </ListItemButton>
+
+          {session && (
+            <ListItemButton
+              component={Link}
+              href="/settings"
+              prefetch={false}
+              selected={isActive("/settings")}
+              onClick={() => setDrawerOpen(false)}
+            >
+              <ListItemIcon>
+                <SettingsIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </ListItemButton>
+          )}
 
           {session && (
             <ListItemButton
