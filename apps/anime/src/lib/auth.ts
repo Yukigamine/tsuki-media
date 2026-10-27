@@ -2,11 +2,13 @@ import "server-only";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
+import { oAuthProxy } from "better-auth/plugins/oauth-proxy";
 import { username } from "better-auth/plugins/username";
-import { getServerBaseUrl } from "@/lib/base-url";
+import { getProductionBaseUrl, getServerBaseUrl } from "@/lib/base-url";
 import prisma from "@/lib/prisma";
 
 const APP_URL = getServerBaseUrl();
+const PRODUCTION_URL = getProductionBaseUrl();
 
 const customOAuthPlugin =
   process.env.CUSTOM_OAUTH_CLIENT_ID && process.env.CUSTOM_OAUTH_CLIENT_SECRET
@@ -43,6 +45,15 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   baseURL: APP_URL,
   emailAndPassword: { enabled: true },
+  trustedOrigins: [
+    APP_URL,
+    PRODUCTION_URL,
+    "http://localhost:3000",
+    "https://tsuki-client-*-team-yuki.vercel.app",
+    ...(process.env.BETTER_AUTH_TRUSTED_ORIGINS?.split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean) ?? []),
+  ],
 
   socialProviders: {
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
@@ -79,7 +90,14 @@ export const auth = betterAuth({
       : {}),
   },
 
-  plugins: [username(), ...(customOAuthPlugin ? [customOAuthPlugin] : [])],
+  plugins: [
+    username(),
+    ...(customOAuthPlugin ? [customOAuthPlugin] : []),
+    oAuthProxy({
+      productionURL: PRODUCTION_URL,
+      secret: process.env.BETTER_AUTH_OAUTH_PROXY_SECRET?.trim() || undefined,
+    }),
+  ],
 
   databaseHooks: {
     user: {

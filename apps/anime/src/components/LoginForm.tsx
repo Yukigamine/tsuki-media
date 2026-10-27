@@ -87,12 +87,13 @@ function LoginContent({
   async function signIn(provider: LoginProvider) {
     setLoading(provider.id);
     try {
-      await authClient.signIn.social({
+      const result = await authClient.signIn.social({
         provider: provider.id as Parameters<
           typeof authClient.signIn.social
         >[0]["provider"],
         callbackURL: "/",
       });
+      if (result.error) setLoading(null);
     } catch {
       setLoading(null);
     }
