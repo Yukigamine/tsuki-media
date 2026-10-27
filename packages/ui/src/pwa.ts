@@ -33,7 +33,7 @@ export function createPwaMetadata(app: App, origin: string): Metadata {
     appleWebApp: {
       capable: true,
       title,
-      statusBarStyle: "black-translucent",
+      statusBarStyle: "default",
       startupImage: appleDevices.flatMap(([width, height, ratio]) =>
         (["portrait", "landscape"] as const).map((orientation) => ({
           url: `${asset}/startup/${orientation === "portrait" ? width * ratio : height * ratio}x${orientation === "portrait" ? height * ratio : width * ratio}.png`,
