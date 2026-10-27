@@ -111,6 +111,5 @@ export function createPwaManifest(app: App): MetadataRoute.Manifest {
 export const pwaViewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  viewportFit: "cover",
   themeColor: "#100629",
 };
