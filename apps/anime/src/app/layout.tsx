@@ -10,7 +10,6 @@ const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
   subsets: ["latin"],
   display: "swap",
-  preload: false,
   adjustFontFallback: false,
 });
 const openSans = Open_Sans({

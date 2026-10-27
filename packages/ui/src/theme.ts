@@ -1,5 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 
+// Reuse the self-hosted Noto Sans already loaded by each app for quieter headings.
+const headingTypography = {
+  fontFamily:
+    'var(--font-noto-sans, "Noto Sans"), var(--font-open-sans, "Open Sans"), Helvetica, sans-serif',
+  fontWeight: 400,
+};
+
 const theme = createTheme({
   cssVariables: {
     colorSchemeSelector: "class",
@@ -23,12 +30,12 @@ const theme = createTheme({
   typography: {
     fontFamily:
       'var(--font-fredoka, "Fredoka"), "Arial Rounded MT Bold", var(--font-noto-sans, "Noto Sans"), var(--font-open-sans, "Open Sans"), Helvetica, sans-serif',
-    h1: { fontWeight: 600 },
-    h2: { fontWeight: 600 },
-    h3: { fontWeight: 600 },
-    h4: { fontWeight: 600 },
-    h5: { fontWeight: 600 },
-    h6: { fontWeight: 600 },
+    h1: headingTypography,
+    h2: headingTypography,
+    h3: headingTypography,
+    h4: headingTypography,
+    h5: headingTypography,
+    h6: headingTypography,
     button: { fontWeight: 500, textTransform: "none" },
   },
   shape: { borderRadius: 10 },
