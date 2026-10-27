@@ -1,19 +1,19 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.*
 
 # testing
-/coverage
+coverage
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build
 
 # misc
 .DS_Store
@@ -27,6 +27,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!**/.env.example
 
 # vercel
 .vercel
@@ -35,8 +36,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+apps/anime/src/generated/prisma
+apps/books/src/generated/prisma
+apps/movies/src/generated/prisma
+apps/anime/public/*.tar
+apps/anime/public/sw.js
+apps/anime/public/workbox-*.js
+apps/anime/public/sw.js.map
+# Generated artifacts left by the former root app
 /src/generated/prisma
-/public/*.tar
-/public/sw.js
-/public/workbox-*.js
-/public/sw.js.map

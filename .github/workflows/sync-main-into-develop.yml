@@ -1,0 +1,66 @@
+name: Sync main into develop
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-main-into-develop
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # A bot token is required: GITHUB_TOKEN-created PRs do not trigger CI.
+      GH_TOKEN: ${{ secrets.BRANCH_SYNC_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Open synchronization PR and enable merge-commit auto-merge
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "$GH_TOKEN" ]]; then
+            echo "::error::Configure BRANCH_SYNC_TOKEN with Contents and Pull requests read/write access."
+            exit 1
+          fi
+          if ! gh api "repos/$GH_REPO/git/ref/heads/develop" --silent; then
+            echo "::error::Cannot read develop; check the branch and bot permissions."
+            exit 1
+          fi
+          ahead=$(gh api "repos/$GH_REPO/compare/develop...main" --jq '.ahead_by')
+          if [[ "$ahead" == "0" ]]; then
+            echo "develop already contains main."
+            exit 0
+          fi
+          pr=$(gh pr list --base develop --head main --state open --json number --jq '.[0].number // empty')
+          if [[ -z "$pr" ]]; then
+            pr=$(gh pr create --base develop --head main \
+              --title "chore: sync main into develop" \
+              --body "Bring production changes and merge ancestry back into develop. Merge with a merge commit; do not squash or rebase. Conflicts require manual resolution.")
+          fi
+          if [[ "$(gh api "repos/$GH_REPO" --jq '.allow_auto_merge and .allow_merge_commit')" != "true" ]]; then
+            echo "::error::Enable Allow auto-merge and Allow merge commits in repository settings. The sync PR remains open."
+            exit 1
+          fi
+          required=$(gh pr checks "$pr" --required --json name --jq 'length' || true)
+          if [[ ! "$required" =~ ^[1-9][0-9]*$ ]]; then
+            echo "::error::Configure required CI checks for develop, then rerun this workflow. The PR remains open."
+            exit 1
+          fi
+          # GitHub may need time to compute mergeability for a newly opened PR.
+          for attempt in {1..6}; do
+            mergeable=$(gh pr view "$pr" --json mergeable --jq '.mergeable')
+            [[ "$mergeable" != "UNKNOWN" ]] && break
+            sleep 5
+          done
+          if [[ "$mergeable" != "MERGEABLE" ]]; then
+            echo "::error::Sync PR has conflicts or unknown mergeability. Resolve manually and rerun; auto-merge was not enabled."
+            exit 1
+          fi
+          gh pr merge "$pr" --auto --merge

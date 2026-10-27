@@ -1,0 +1,32 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+import dotenv from "dotenv";
+import { defineConfig } from "prisma/config";
+
+const envFiles = [
+  ".env.development.local",
+  ".env.local",
+  ".env.development",
+  ".env",
+  "../../.env.development.local",
+  "../../.env.local",
+  "../../.env.development",
+  "../../.env",
+];
+
+for (const file of envFiles) {
+  const filePath = path.resolve(process.cwd(), file);
+  if (existsSync(filePath)) {
+    dotenv.config({ path: filePath, quiet: true });
+  }
+}
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  datasource: {
+    url: process.env.POSTGRES_URL_NON_POOLING,
+  },
+});

@@ -1,0 +1,37 @@
+{
+  "name": "@tsuki-media/books",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack --port 3001",
+    "build": "next build --turbopack",
+    "generate": "prisma generate",
+    "deploy": "prisma generate && prisma migrate deploy && next build --turbopack",
+    "db-edit": "prisma studio",
+    "db-init": "prisma migrate reset",
+    "start": "next start --port 3001",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/icons-material": "9.5.0",
+    "@mui/material": "9.5.0",
+    "@mui/material-nextjs": "9.5.0",
+    "@prisma/client": "7.10.0",
+    "@tsuki-media/providers": "workspace:*",
+    "@tsuki-media/ui": "workspace:*",
+    "next": "16.4.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "dotenv": "18.0.7",
+    "prisma": "7.10.0",
+    "typescript": "7.0.2"
+  }
+}

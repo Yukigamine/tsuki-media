@@ -1,0 +1,5 @@
+# Generated GraphQL artifacts are reviewed through their generator, not line diffs.
+graphql/** -diff
+src/lib/zeus/** -diff
+apps/anime/graphql/** -diff
+apps/anime/src/lib/zeus/** -diff

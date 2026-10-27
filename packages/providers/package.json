@@ -1,0 +1,20 @@
+{
+  "name": "@tsuki-media/providers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./hardcover": "./src/hardcover.ts",
+    "./tmdb": "./src/tmdb.ts",
+    "./types": "./src/types.ts"
+  },
+  "scripts": {
+    "test": "tsx --test src/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

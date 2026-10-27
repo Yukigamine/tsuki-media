@@ -5,8 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: tsuki-anime-app
-    env_file: .env
+    container_name: tsuki-media-anime
+    env_file:
+      - .env
+      - apps/anime/.env
     ports:
       - "3000:3000"
     depends_on:
@@ -17,31 +19,33 @@ services:
     environment:
       NODE_ENV: production
     networks:
-      - anime-network
+      - media-network
 
   postgres:
-    image: postgres:17-alpine
-    container_name: tsuki-anime-db
+    image: postgres:18-alpine
+    container_name: tsuki-media-db
     env_file: .env
     environment:
       POSTGRES_USER: ${DATABASE_USER:-postgres}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
-      POSTGRES_DB: ${DATABASE_NAME:-tsuki_anime}
+      POSTGRES_DB: ${DATABASE_NAME:-tsuki_media}
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # PostgreSQL 18 stores PGDATA in a versioned directory beneath this mount.
+      # This example targets fresh installations; older clusters require migration.
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - anime-network
+      - media-network
 
   redis:
-    image: redis:7-alpine
-    container_name: tsuki-anime-cache
+    image: redis:8-alpine
+    container_name: tsuki-media-cache
     env_file: .env
     ports:
       - "6379:6379"
@@ -54,12 +58,12 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - anime-network
+      - media-network
 
 volumes:
   postgres_data:
   redis_data:
 
 networks:
-  anime-network:
+  media-network:
     driver: bridge
