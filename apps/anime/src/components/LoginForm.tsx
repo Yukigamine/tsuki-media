@@ -87,21 +87,12 @@ function LoginContent({
   async function signIn(provider: LoginProvider) {
     setLoading(provider.id);
     try {
-      if (provider.id === "oauth") {
-        // Custom OAuth uses the generic OAuth plugin
-        await authClient.signIn.oauth2({
-          providerId: "oauth",
-          callbackURL: "/",
-        });
-      } else {
-        // Standard social providers
-        await authClient.signIn.social({
-          provider: provider.id as Parameters<
-            typeof authClient.signIn.social
-          >[0]["provider"],
-          callbackURL: "/",
-        });
-      }
+      await authClient.signIn.social({
+        provider: provider.id as Parameters<
+          typeof authClient.signIn.social
+        >[0]["provider"],
+        callbackURL: "/",
+      });
     } catch {
       setLoading(null);
     }

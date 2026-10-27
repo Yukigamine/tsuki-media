@@ -111,17 +111,12 @@ export default function WelcomeForm({
       return;
     }
 
-    if (provider === "oauth") {
-      await authClient.signIn.oauth2({
-        providerId: "oauth",
-        callbackURL: "/welcome",
-      });
-    } else {
-      await authClient.signIn.social({
-        provider: provider as "google" | "discord" | "github" | "twitter",
-        callbackURL: "/welcome",
-      });
-    }
+    await authClient.signIn.social({
+      provider: provider as Parameters<
+        typeof authClient.signIn.social
+      >[0]["provider"],
+      callbackURL: "/welcome",
+    });
   }
 
   if (hasSession) {
