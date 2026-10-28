@@ -43,7 +43,10 @@ export function ItemLookupField({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (disabled) return;
+    if (disabled) {
+      setLoading(false);
+      return;
+    }
     if (
       !inputValue.trim() ||
       inputValue === value?.titleTranslated ||
@@ -51,10 +54,12 @@ export function ItemLookupField({
       inputValue === value?.titleRomaji
     ) {
       if (!inputValue.trim()) setOptions([]);
+      setLoading(false);
       return;
     }
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
+    let ignore = false;
     debounceRef.current = setTimeout(async () => {
       setLoading(true);
       try {
@@ -62,15 +67,16 @@ export function ItemLookupField({
           type === "anime"
             ? await searchAnimeByTitleClient(inputValue)
             : await searchMangaByTitleClient(inputValue);
-        setOptions(items);
+        if (!ignore) setOptions(items);
       } catch {
-        setOptions([]);
+        if (!ignore) setOptions([]);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     }, 350);
 
     return () => {
+      ignore = true;
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [

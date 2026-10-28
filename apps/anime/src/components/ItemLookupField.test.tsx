@@ -121,3 +121,127 @@ it("clears stale search options after provider failure", async () => {
   expect(screen.queryByRole("option")).not.toBeInTheDocument();
   expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
 });
+
+it("retains the newest results when an older provider response arrives late", async () => {
+  let old!: (items: KitsuSearchResult[]) => void,
+    latest!: (items: KitsuSearchResult[]) => void;
+  search.anime
+    .mockReturnValueOnce(
+      new Promise((r) => {
+        old = r;
+      }),
+    )
+    .mockReturnValueOnce(
+      new Promise((r) => {
+        latest = r;
+      }),
+    );
+  render(<ItemLookupField type="anime" onSelect={vi.fn()} />);
+  input("old");
+  await elapse();
+  input("new");
+  await elapse();
+  await act(async () => {
+    latest([{ ...result, kitsuId: "new", titleTranslated: "Newest result" }]);
+  });
+  expect(screen.getByRole("option")).toHaveTextContent("Newest result");
+  await act(async () => {
+    old([result]);
+  });
+  expect(screen.getByRole("option")).toHaveTextContent("Newest result");
+});
+
+it("keeps the loading indicator active while a newer query is pending", async () => {
+  let old!: (items: KitsuSearchResult[]) => void;
+  let latest!: (items: KitsuSearchResult[]) => void;
+  search.anime
+    .mockReturnValueOnce(
+      new Promise((r) => {
+        old = r;
+      }),
+    )
+    .mockReturnValueOnce(
+      new Promise((r) => {
+        latest = r;
+      }),
+    );
+  render(<ItemLookupField type="anime" onSelect={vi.fn()} />);
+  input("old");
+  await elapse();
+  input("new");
+  await elapse();
+  await act(async () => {
+    old([result]);
+  });
+  expect(screen.getByRole("progressbar")).toBeInTheDocument();
+  await act(async () => {
+    latest([{ ...result, titleTranslated: "Latest" }]);
+  });
+  expect(screen.getByRole("option")).toHaveTextContent("Latest");
+  expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+});
+
+it("does not erase newer results when an obsolete request fails", async () => {
+  let rejectOld!: (error: Error) => void;
+  search.anime
+    .mockReturnValueOnce(
+      new Promise((_, reject) => {
+        rejectOld = reject;
+      }),
+    )
+    .mockResolvedValueOnce([{ ...result, titleTranslated: "Latest" }]);
+  render(<ItemLookupField type="anime" onSelect={vi.fn()} />);
+  input("old");
+  await elapse();
+  input("new");
+  await elapse();
+  await act(async () => {
+    rejectOld(new Error("Old query failed"));
+  });
+  expect(screen.getByRole("option")).toHaveTextContent("Latest");
+});
+
+it("clears loading immediately when an in-flight search is cleared or disabled", async () => {
+  let first!: (items: KitsuSearchResult[]) => void;
+  let second!: (items: KitsuSearchResult[]) => void;
+  search.anime
+    .mockReturnValueOnce(
+      new Promise((resolve) => {
+        first = resolve;
+      }),
+    )
+    .mockReturnValueOnce(
+      new Promise((resolve) => {
+        second = resolve;
+      }),
+    );
+  const select = vi.fn();
+  const { rerender, unmount } = render(
+    <ItemLookupField type="anime" onSelect={select} />,
+  );
+  const field = input("query");
+  await elapse();
+  expect(screen.getByRole("progressbar")).toBeInTheDocument();
+  fireEvent.change(field, { target: { value: "" } });
+  expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  await act(async () => {
+    first([result]);
+  });
+  expect(screen.queryByRole("option")).not.toBeInTheDocument();
+  input("another");
+  await elapse();
+  expect(screen.getByRole("progressbar")).toBeInTheDocument();
+  rerender(<ItemLookupField type="anime" disabled onSelect={select} />);
+  expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+  await act(async () => {
+    second([result]);
+  });
+  rerender(<ItemLookupField type="anime" onSelect={select} />);
+  fireEvent.focus(screen.getByRole("combobox"));
+  expect(screen.queryByRole("option")).not.toBeInTheDocument();
+  // Unmount cancels the newly scheduled debounce instead of sending a third query.
+  unmount();
+  await elapse();
+  expect(search.anime).toHaveBeenCalledTimes(2);
+  expect(select).not.toHaveBeenCalled();
+});
