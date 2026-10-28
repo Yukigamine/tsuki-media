@@ -7,6 +7,9 @@ on:
 
 permissions:
   contents: read
+  checks: read
+  statuses: read
+  pull-requests: read
 
 concurrency:
   group: sync-main-into-develop
@@ -19,6 +22,7 @@ jobs:
     env:
       # A bot token is required: GITHUB_TOKEN-created PRs do not trigger CI.
       GH_TOKEN: ${{ secrets.BRANCH_SYNC_TOKEN }}
+      CHECKS_READ_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
     steps:
       - name: Open synchronization PR and enable merge-commit auto-merge
@@ -48,7 +52,10 @@ jobs:
             echo "::error::Enable Allow auto-merge and Allow merge commits in repository settings. The sync PR remains open."
             exit 1
           fi
-          required=$(gh pr checks "$pr" --required --json name --jq 'length' || true)
+          if ! required=$(GH_TOKEN="$CHECKS_READ_TOKEN" gh pr checks "$pr" --required --json name --jq 'length'); then
+            echo "::error::Cannot query required CI checks with GITHUB_TOKEN. Check the API error above; auto-merge was not enabled."
+            exit 1
+          fi
           if [[ ! "$required" =~ ^[1-9][0-9]*$ ]]; then
             echo "::error::Configure required CI checks for develop, then rerun this workflow. The PR remains open."
             exit 1
