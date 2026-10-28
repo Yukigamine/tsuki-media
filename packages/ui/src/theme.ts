@@ -42,11 +42,15 @@ const theme = createTheme({
   components: {
     MuiAppBar: {
       styleOverrides: {
-        root: ({ theme }) =>
-          theme.applyStyles("light", {
-            backgroundColor: "#35225c",
-            color: "#ffffff",
-          }),
+        root: ({ theme }) => ({
+          // Follow the SVG silhouette without changing installed icon artwork.
+          '& img[src="/icons/tsuki/squirlecon.svg"]': {
+            "--logo-outline": "#ffffff",
+            filter:
+              "drop-shadow(1px 0 0 var(--logo-outline)) drop-shadow(-1px 0 0 var(--logo-outline)) drop-shadow(0 1px 0 var(--logo-outline)) drop-shadow(0 -1px 0 var(--logo-outline))",
+            ...theme.applyStyles("dark", { "--logo-outline": "#000000" }),
+          },
+        }),
       },
     },
     MuiCssBaseline: {
