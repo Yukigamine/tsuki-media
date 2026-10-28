@@ -1,5 +1,5 @@
 # Build the existing anime/manga app from the Tsuki Media workspace.
-FROM node:24-alpine AS builder
+FROM node:26-alpine AS builder
 
 WORKDIR /app
 RUN npm install -g pnpm
@@ -8,7 +8,7 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 RUN pnpm --filter @tsuki-media/anime deploy
 
-FROM node:24-alpine
+FROM node:26-alpine
 
 WORKDIR /app
 RUN npm install -g pnpm
