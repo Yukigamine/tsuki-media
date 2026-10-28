@@ -174,6 +174,93 @@ for (const manga of [false, true]) {
       expect(f.upsertManga).not.toHaveBeenCalled();
       expect(f.refresh).not.toHaveBeenCalled();
     });
+    it("applies a real modal save optimistically without waiting for a route refresh", async () => {
+      render(view());
+      fireEvent.click(screen.getByRole("button", { name: "table view" }));
+      fireEvent.click(
+        screen.getByRole("tab", { name: manga ? "Reading 2" : "Watching 2" }),
+      );
+      fireEvent.change(screen.getByPlaceholderText("Search..."), {
+        target: { value: "Alpha" },
+      });
+      await waitFor(() =>
+        expect(
+          screen.queryByRole("link", { name: "Romaji" }),
+        ).not.toBeInTheDocument(),
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Edit Alpha" }));
+      fireEvent.change(
+        screen.getByLabelText(
+          manga ? "Chapter Progress (max 20)" : "Progress (max 12)",
+        ),
+        { target: { value: "7" } },
+      );
+      fireEvent.click(screen.getByRole("button", { name: "Save" }));
+      await waitFor(() => expect(f.refresh).toHaveBeenCalledOnce());
+      expect(manga ? f.upsertManga : f.upsertAnime).toHaveBeenCalledWith(
+        expect.objectContaining({ progress: 7 }),
+      );
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(
+        screen.getByText(manga ? "7 ch / 20" : "7 / 12"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("tab", { name: manga ? "Reading 2" : "Watching 2" }),
+      ).toHaveAttribute("aria-selected", "true");
+      expect(screen.getByPlaceholderText("Search...")).toHaveValue("Alpha");
+      expect(
+        screen.queryByRole("link", { name: "Beta" }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: "Romaji" }),
+      ).not.toBeInTheDocument();
+    });
+    it("replaces local entries when a refreshed server snapshot arrives", async () => {
+      const result = render(view());
+      fireEvent.click(screen.getByRole("button", { name: "table view" }));
+      fireEvent.click(
+        screen.getByRole("tab", { name: manga ? "Reading 2" : "Watching 2" }),
+      );
+      fireEvent.change(screen.getByPlaceholderText("Search..."), {
+        target: { value: "Alpha" },
+      });
+      await waitFor(() =>
+        expect(
+          screen.queryByRole("link", { name: "Romaji" }),
+        ).not.toBeInTheDocument(),
+      );
+      const refreshed = item("new", "Alpha refreshed", active, manga);
+      refreshed.listEntry.progress = 9;
+      result.rerender(
+        view([
+          refreshed,
+          item("completed", "Alpha completed", "COMPLETED", manga),
+          item("other", "Other", active, manga),
+        ]),
+      );
+      expect(
+        screen.getByRole("link", { name: "Alpha refreshed" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(manga ? "9 ch / 20" : "9 / 12"),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: "Alpha" }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: "Alpha completed" }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("link", { name: "Other" }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole("tab", { name: manga ? "Reading 2" : "Watching 2" }),
+      ).toHaveAttribute("aria-selected", "true");
+      expect(screen.getByPlaceholderText("Search...")).toHaveValue("Alpha");
+      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(f.refresh).not.toHaveBeenCalled();
+    });
     it("keeps a failed save open with the error and leaves tracking untouched", async () => {
       (manga ? f.upsertManga : f.upsertAnime).mockResolvedValue({
         ok: false,
