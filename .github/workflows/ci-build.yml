@@ -42,6 +42,9 @@ jobs:
       - name: Check dependencies
         run: pnpm knip:deps
 
+      - name: Test Anime regressions
+        run: pnpm test
+
       - name: Build package (to confirm building works)
         run: pnpm build
         env:
