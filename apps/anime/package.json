@@ -37,7 +37,7 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
-    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/adapter-pg": "7.10.1",
     "@serwist/next": "9.5.13",
     "@serwist/turbopack": "9.5.13",
     "@types/node": "26.6.5",
