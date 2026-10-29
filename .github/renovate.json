@@ -5,6 +5,12 @@
   "baseBranchPatterns": ["develop", "main"],
   "packageRules": [
     {
+      "description": "Rebase ordinary develop updates only when conflicted.",
+      "matchBaseBranches": ["develop"],
+      "matchJsonata": ["$not(isVulnerabilityAlert = true)"],
+      "rebaseWhen": "conflicted"
+    },
+    {
       "matchManagers": ["npm"],
       "rangeStrategy": "pin"
     },
