@@ -29,7 +29,7 @@
     "better-auth": "1.7.10",
     "next": "16.4.1",
     "notistack": "3.0.2",
-    "prisma": "7.10.0",
+    "prisma": "7.10.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "redis": "6.3.0",
