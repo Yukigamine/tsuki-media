@@ -19,7 +19,7 @@
     "@mui/icons-material": "9.5.0",
     "@mui/material": "9.5.0",
     "@mui/material-nextjs": "9.5.0",
-    "@prisma/client": "7.10.0",
+    "@prisma/client": "7.10.1",
     "@tsuki-media/providers": "workspace:*",
     "@tsuki-media/ui": "workspace:*",
     "next": "16.4.1",
