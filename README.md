@@ -1,13 +1,11 @@
 # Tsuki Media
 
-
 Tsuki Media is a pnpm monorepo for personal media collections.
 
 ## Let poor Neon sleep!
 
 Redis (`REDIS_URL`) caches browsing data; Neon remains the durable source for
 saved titles, lists, collections, authentication, and sync logs.
-
 - `library:v1:all`: one 24-hour snapshot of saved anime/manga metadata, list
   entries, collection items, and provider-ID mappings. List, collection, detail,
   and profile-total pages share it. An absent title is not a browsing restriction.
@@ -35,11 +33,11 @@ database records.
 
 ## Applications
 
-| App | Development URL | Documentation |
-| --- | --- | --- |
-| Anime and manga | http://localhost:3000 | [apps/anime](apps/anime/README.md) |
-| Books | http://localhost:3001 | [apps/books](apps/books/README.md) |
-| Movies | http://localhost:3002 | [apps/movies](apps/movies/README.md) |
+| App             | Development URL       | Documentation                        |
+| --------------- | --------------------- | ------------------------------------ |
+| Anime and manga | http://localhost:3000 | [apps/anime](apps/anime/README.md)   |
+| Books           | http://localhost:3001 | [apps/books](apps/books/README.md)   |
+| Movies          | http://localhost:3002 | [apps/movies](apps/movies/README.md) |
 
 Shared provider clients and UI components live in `packages/providers` and
 `packages/ui`.
