@@ -1,6 +1,7 @@
 # Kitsu vs AniList Push Logic Flow Comparison
 
 ## Overview
+
 Both `pushKitsu()` and `pushAniList()` now implement consistent safety gates to prevent API errors from invalid progress values exceeding episode/chapter counts.
 
 ---
@@ -8,21 +9,25 @@ Both `pushKitsu()` and `pushAniList()` now implement consistent safety gates to 
 ## Phase 1: Data Loading & Pre-Sync Validation Logging
 
 ### Kitsu (lines 939-980)
+
 ```typescript
 // Load remote anime/manga maps and local entries
 const remoteAnimeMap = await scanKitsuIds(slug, "ANIME");
-const animeEntries = await prisma.animeListEntry.findMany({ include: { anime: true } });
+const animeEntries = await prisma.animeListEntry.findMany({
+  include: { anime: true },
+});
 
 // Log entries with missing episode counts
 const missingEpisodeCount = animeEntries.filter((e) => !e.anime.episodeCount);
 // Log entries with progress > episodeCount
 const invalidProgressAnime = animeEntries.filter(
-  (e) => e.anime.episodeCount && e.progress > e.anime.episodeCount
+  (e) => e.anime.episodeCount && e.progress > e.anime.episodeCount,
 );
 // Same pattern for manga with chapterCount
 ```
 
 ### AniList (lines 794-855)
+
 ```typescript
 // Load remote anime/manga maps and local entries
 const [remoteAnimeMap, remoteMangaMap, animeEntries, mangaEntries] =
@@ -37,7 +42,7 @@ const [remoteAnimeMap, remoteMangaMap, animeEntries, mangaEntries] =
 const missingEpisodeCount = animeEntries.filter((e) => !e.anime.episodeCount);
 // Log entries with progress > episodeCount
 const invalidProgressAnime = animeEntries.filter(
-  (e) => e.anime.episodeCount && e.progress > e.anime.episodeCount
+  (e) => e.anime.episodeCount && e.progress > e.anime.episodeCount,
 );
 // Same pattern for manga with chapterCount
 ```
@@ -49,13 +54,16 @@ const invalidProgressAnime = animeEntries.filter(
 ## Phase 2a: Entry Validation
 
 ### Kitsu (lines 995-1003)
+
 ```typescript
 for (const entry of animeEntries) {
   // Validate entry before attempting sync
   const entryIssues = validateAnimeListEntry(entry);
   const mediaIssues = validateMediaRecord(entry.anime);
   if (entryIssues.length > 0 || mediaIssues.length > 0) {
-    errors.push(`anime entry ${entry.id}: ${[...entryIssues, ...mediaIssues].join(", ")}`);
+    errors.push(
+      `anime entry ${entry.id}: ${[...entryIssues, ...mediaIssues].join(", ")}`,
+    );
     continue;
   }
   // Continue processing
@@ -63,13 +71,16 @@ for (const entry of animeEntries) {
 ```
 
 ### AniList (lines 869-878)
+
 ```typescript
 for (const entry of animeEntries) {
   // Validate entry before attempting sync
   const entryIssues = validateAnimeListEntry(entry);
   const mediaIssues = validateMediaRecord(entry.anime);
   if (entryIssues.length > 0 || mediaIssues.length > 0) {
-    errors.push(`anime entry ${entry.id}: ${[...entryIssues, ...mediaIssues].join(", ")}`);
+    errors.push(
+      `anime entry ${entry.id}: ${[...entryIssues, ...mediaIssues].join(", ")}`,
+    );
     continue;
   }
   // Continue processing
@@ -83,6 +94,7 @@ for (const entry of animeEntries) {
 ## Phase 2b: Progress Clamping for Updates
 
 ### Kitsu (lines 1020-1045)
+
 ```typescript
 if (remote) {
   if (!kitsuAnimeNeedsUpdate(entry, remote)) continue;
@@ -113,6 +125,7 @@ if (remote) {
 ```
 
 ### AniList (lines 916-951)
+
 ```typescript
 if (remote) {
   if (!anilistAnimeNeedsUpdate(entry, remote)) continue;
@@ -154,6 +167,7 @@ if (remote) {
 ## Phase 2c: Progress Clamping for Creates
 
 ### Kitsu (lines 1047-1090)
+
 ```typescript
 else if (entry.anime.kitsuId) {
   let episodeCount = entry.anime.episodeCount;
@@ -186,6 +200,7 @@ else if (entry.anime.kitsuId) {
 ```
 
 ### AniList (lines 953-970)
+
 ```typescript
 else if (entry.anime.anilistId != null) {
   // Clamp progress based on local episode count
@@ -222,19 +237,21 @@ else if (entry.anime.anilistId != null) {
 ## Phase 3: Operation Summary Logging
 
 ### Kitsu (implicit in batch execution)
+
 ```typescript
 console.log(
-  `[Kitsu Push] Anime: ${animeUpdateOps.length} updates, ${animeCreateOps.length} creates, ${animeDeleteOps.length} deletes`
+  `[Kitsu Push] Anime: ${animeUpdateOps.length} updates, ${animeCreateOps.length} creates, ${animeDeleteOps.length} deletes`,
 );
 ```
 
 ### AniList (lines 1099-1106)
+
 ```typescript
 console.log(
-  `[AniList Push] Anime: ${animeUpdateOps.length} updates, ${animeCreateOps.length} creates, ${animeDeleteOps.length} deletes`
+  `[AniList Push] Anime: ${animeUpdateOps.length} updates, ${animeCreateOps.length} creates, ${animeDeleteOps.length} deletes`,
 );
 console.log(
-  `[AniList Push] Manga: ${mangaUpdateOps.length} updates, ${mangaCreateOps.length} creates, ${mangaDeleteOps.length} deletes`
+  `[AniList Push] Manga: ${mangaUpdateOps.length} updates, ${mangaCreateOps.length} creates, ${mangaDeleteOps.length} deletes`,
 );
 ```
 
@@ -244,16 +261,16 @@ console.log(
 
 ## Summary: Logic Flow Alignment
 
-| Step | Kitsu | AniList | Status |
-|------|-------|---------|--------|
-| 1. Load data | ✅ | ✅ | Same |
-| 2. Pre-sync validation logging | ✅ | ✅ | Same |
-| 3. Entry validation | ✅ | ✅ | Same |
-| 4. Progress clamping (updates) | ✅ Remote count | ✅ Remote count | Same |
+| Step                           | Kitsu            | AniList          | Status                  |
+| ------------------------------ | ---------------- | ---------------- | ----------------------- |
+| 1. Load data                   | ✅               | ✅               | Same                    |
+| 2. Pre-sync validation logging | ✅               | ✅               | Same                    |
+| 3. Entry validation            | ✅               | ✅               | Same                    |
+| 4. Progress clamping (updates) | ✅ Remote count  | ✅ Remote count  | Same                    |
 | 5. Progress clamping (creates) | ✅ Fetch + clamp | ✅ Local + clamp | Different (intentional) |
-| 6. Operation summary logging | ✅ | ✅ | Same |
-| 7. Batch execution | ✅ | ✅ | Same |
-| 8. Error handling | ✅ | ✅ | Same |
+| 6. Operation summary logging   | ✅               | ✅               | Same                    |
+| 7. Batch execution             | ✅               | ✅               | Same                    |
+| 8. Error handling              | ✅               | ✅               | Same                    |
 
 ---
 
