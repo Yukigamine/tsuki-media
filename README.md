@@ -6,6 +6,7 @@ Tsuki Media is a pnpm monorepo for personal media collections.
 
 Redis (`REDIS_URL`) caches browsing data; Neon remains the durable source for
 saved titles, lists, collections, authentication, and sync logs.
+
 - `library:v1:all`: one 24-hour snapshot of saved anime/manga metadata, list
   entries, collection items, and provider-ID mappings. List, collection, detail,
   and profile-total pages share it. An absent title is not a browsing restriction.
@@ -27,9 +28,6 @@ Neon and emit `[cache]` errors. Authentication and sync operations still access
 Neon. Browser components continue to fetch supplemental provider information
 (genres, streaming links, related titles). This change does not migrate or remove
 database records.
-
-
-
 
 ## Applications
 
