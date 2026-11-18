@@ -157,6 +157,7 @@ if (remote) {
 ```
 
 **Result**: ✅ **Same logic flow**
+
 - Both check if update is needed
 - Both use remote count as authoritative
 - Both clamp using `Math.min()`
@@ -222,12 +223,14 @@ else if (entry.anime.anilistId != null) {
 ```
 
 **Result**: ⚠️ **Slightly different methodology (by design)**
+
 - **Kitsu**: Fetches media details from API for creates (extra validation)
 - **AniList**: Uses local episode count for creates (simpler, but still safe)
 - Both clamp progress and log warnings
 - Both prevent invalid progress from being sent to API
 
 **Note**: AniList doesn't fetch because:
+
 - Local database already has accurate counts from pull operations
 - AniList remote entry already includes episode count in `scanAniListEntries()`
 - Additional fetch would add latency without significant benefit

@@ -42,6 +42,7 @@ HTTP 200/image content types for all referenced branding files. Desktop checks
 cannot prove which startup image iOS selects or how its install cache behaves.
 
 Before accepting the designs on Apple devices:
+
 1. Use the HTTPS deployment in Safari, then Add to Home Screen. A normal Safari
    tab does not show the installed web app's launch screen.
 2. Open the installed app in portrait, fully close it, then cold-launch in
@@ -58,6 +59,7 @@ Startup artwork is not a guaranteed full-screen animation or minimum-duration
 loading screen. Android creates its own launch surface from manifest assets.
 
 References:
+
 - https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
 - https://web.dev/learn/pwa/enhancements
 - https://web.dev/articles/maskable-icon
