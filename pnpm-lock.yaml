@@ -215,8 +215,8 @@ importers:
         specifier: 9.1.7
         version: 9.1.7
       knip:
-        specifier: 6.45.0
-        version: 6.45.0
+        specifier: 6.45.1
+        version: 6.45.1
       lint-staged:
         specifier: 17.6.0
         version: 17.6.0
@@ -324,8 +324,8 @@ importers:
         specifier: 7.2.1
         version: 7.2.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/node@26.6.5)(graphql@16.14.2)(supports-color@7.2.0)(typescript@7.0.2)
       knip:
-        specifier: 6.45.0
-        version: 6.45.0
+        specifier: 6.45.1
+        version: 6.45.1
       server-only:
         specifier: 0.0.1
         version: 0.0.1
@@ -3697,8 +3697,8 @@ packages:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
 
-  knip@6.45.0:
-    resolution: {integrity: sha512-ywPAhxiJGPWD/1V5dVYawA6el74q4vgX8omkeyl0MbA1CCkdjxrvWXXVqM20a5wQWcl1NbC9ImLHYsbFEbD0Xg==}
+  knip@6.45.1:
+    resolution: {integrity: sha512-zp3zXKy2cZWiIttdlWU5fisKxVQaLSU6471ej0KGz1GdHdaHxpzTAO/LIyFNc3gU3v1W7LJaqvYumoO3l/u+6A==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -7778,7 +7778,7 @@ snapshots:
 
   kleur@3.0.3: {}
 
-  knip@6.45.0:
+  knip@6.45.1:
     dependencies:
       formatly: 0.11.4
       get-tsconfig: 4.14.3
