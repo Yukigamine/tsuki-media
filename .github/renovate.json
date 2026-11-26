@@ -24,6 +24,33 @@
       "automerge": true
     },
     {
+      "description": "Batch routine Knip and test-tool patches once a week on develop.",
+      "matchBaseBranches": ["develop"],
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchPackageNames": [
+        "knip",
+        "vitest",
+        "@vitest/coverage-v8",
+        "@testing-library/jest-dom",
+        "@testing-library/react",
+        "happy-dom"
+      ],
+      "matchUpdateTypes": ["patch"],
+      "matchJsonata": ["$not(isVulnerabilityAlert = true)"],
+      "groupName": "weekly dev-tool patches",
+      "schedule": ["* 13-16 * * 1"],
+      "updateNotScheduled": false
+    },
+    {
+      "description": "Wait for Dependency Dashboard approval before opening ordinary major updates on develop.",
+      "matchBaseBranches": ["develop"],
+      "matchUpdateTypes": ["major"],
+      "matchJsonata": ["$not(isVulnerabilityAlert = true)"],
+      "dependencyDashboardApproval": true,
+      "automerge": false
+    },
+    {
       "matchPackageNames": ["@biomejs/biome"],
       "postUpgradeTasks": {
         "commands": [
