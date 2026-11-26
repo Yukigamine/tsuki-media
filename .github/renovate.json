@@ -39,7 +39,9 @@
       "matchUpdateTypes": ["patch"],
       "matchJsonata": ["$not(isVulnerabilityAlert = true)"],
       "groupName": "weekly dev-tool patches",
-      "schedule": ["* 13-16 * * 1"],
+      "groupSlug": "weekly-dev-tool-patches",
+      "timezone": "Etc/UTC",
+      "schedule": ["* * * * 1"],
       "updateNotScheduled": false
     },
     {
