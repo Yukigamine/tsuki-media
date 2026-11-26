@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Anime Collection – Tsuki Anime" };
 export const dynamic = "force-dynamic";
 
 export default async function AnimeCollectionPage() {
-  const title = getLibraryPageTitle("anime", "collection");
+  const title = await getLibraryPageTitle("anime", "collection");
   const [items, session] = await Promise.all([
     getLibrarySnapshot().then((library) =>
       library.anime.flatMap(

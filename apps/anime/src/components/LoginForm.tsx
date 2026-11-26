@@ -10,6 +10,7 @@ import {
   CardContent,
   CircularProgress,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useSearchParams } from "next/navigation";
@@ -71,9 +72,16 @@ function ProviderIcon({ provider }: { provider: LoginProvider }) {
   return <LanguageIcon sx={{ fontSize: 20 }} />;
 }
 
-function LoginContent({ providers }: { providers: LoginProvider[] }) {
+function LoginContent({
+  providers,
+  credentials,
+}: {
+  providers: LoginProvider[];
+  credentials: boolean;
+}) {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+  const [authError, setAuthError] = useState("");
   const [loading, setLoading] = useState<string | null>(null);
 
   async function signIn(provider: LoginProvider) {
@@ -87,6 +95,20 @@ function LoginContent({ providers }: { providers: LoginProvider[] }) {
       });
       if (result.error) setLoading(null);
     } catch {
+      setLoading(null);
+    }
+  }
+
+  async function signInWithCredentials(formData: FormData) {
+    setLoading("credentials");
+    setAuthError("");
+    const result = await authClient.signIn.username({
+      username: String(formData.get("username") ?? ""),
+      password: String(formData.get("password") ?? ""),
+      callbackURL: "/",
+    });
+    if (result.error) {
+      setAuthError("Invalid username or password.");
       setLoading(null);
     }
   }
@@ -122,8 +144,43 @@ function LoginContent({ providers }: { providers: LoginProvider[] }) {
                 Your account is not authorized to access this app.
               </Alert>
             )}
+            {authError && (
+              <Alert severity="error" sx={{ width: "100%" }}>
+                {authError}
+              </Alert>
+            )}
 
-            {providers.length === 0 ? (
+            {credentials ? (
+              <Stack
+                component="form"
+                action={signInWithCredentials}
+                spacing={1.5}
+                sx={{ width: "100%" }}
+              >
+                <TextField name="username" label="Username" required />
+                <TextField
+                  name="password"
+                  label="Password"
+                  type="password"
+                  required
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="large"
+                  disabled={loading !== null}
+                  startIcon={
+                    loading === "credentials" ? (
+                      <CircularProgress size={18} />
+                    ) : (
+                      <LoginIcon />
+                    )
+                  }
+                >
+                  Sign in
+                </Button>
+              </Stack>
+            ) : providers.length === 0 ? (
               <Alert severity="warning" sx={{ width: "100%" }}>
                 No OAuth providers are configured. Set provider env vars and
                 restart.
@@ -173,12 +230,14 @@ function LoginContent({ providers }: { providers: LoginProvider[] }) {
 
 export default function LoginForm({
   providers,
+  credentials,
 }: {
   providers: LoginProvider[];
+  credentials: boolean;
 }) {
   return (
     <Suspense>
-      <LoginContent providers={providers} />
+      <LoginContent providers={providers} credentials={credentials} />
     </Suspense>
   );
 }

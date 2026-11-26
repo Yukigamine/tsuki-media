@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { exchangeAniListCode } from "@/lib/anilist/auth";
 import { getToken } from "@/lib/provider-links";
 import { getSession } from "@/lib/session";
+import { getSettings } from "@/lib/settings";
 
 // Allowlist of safe error messages to surface to the user.
 const SAFE_ERRORS = new Set(["access_denied", "missing_code"]);
@@ -42,7 +43,7 @@ export async function GET(request: Request) {
   try {
     await exchangeAniListCode(code, { userId: session.user.id });
 
-    const requiredUsername = process.env.NEXT_PUBLIC_ANILIST_USERNAME;
+    const { anilistUsername: requiredUsername } = await getSettings();
     if (requiredUsername) {
       const stored = await getToken("ANILIST", { userId: session.user.id });
       if (

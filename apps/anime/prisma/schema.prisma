@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -84,17 +83,34 @@ enum MangaLanguage {
 // BetterAuth session management tables
 
 model User {
-  id            String    @id
-  name          String
-  email         String    @unique
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
+  id              String    @id
+  name            String
+  email           String    @unique
+  emailVerified   Boolean
+  image           String?
+  username        String?   @unique
+  displayUsername String?
+  master          Boolean   @unique @default(true)
+  createdAt       DateTime
+  updatedAt       DateTime
+  sessions        Session[]
+  accounts        Account[]
 
   @@map("user")
+}
+
+model Settings {
+  id              String   @id @default("app")
+  setupComplete   Boolean  @default(false)
+  displayName     String   @default("")
+  kitsuUsername   String   @default("")
+  anilistUsername String   @default("")
+  authProvider    String   @default("")
+  masterEmail     String   @default("")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("settings")
 }
 
 model Session {
@@ -108,8 +124,8 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("session")
   @@index([userId])
+  @@map("session")
 }
 
 model Account {
@@ -128,8 +144,8 @@ model Account {
   createdAt             DateTime
   updatedAt             DateTime
 
-  @@map("account")
   @@index([userId])
+  @@map("account")
 }
 
 model Verification {
@@ -140,8 +156,8 @@ model Verification {
   createdAt  DateTime?
   updatedAt  DateTime?
 
-  @@map("verification")
   @@index([identifier])
+  @@map("verification")
 }
 
 // ─── Sync Logs ────────────────────────────────────────────────────────────────

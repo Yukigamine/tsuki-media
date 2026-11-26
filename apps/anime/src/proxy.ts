@@ -1,17 +1,40 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getSessionFromRequest } from "@/lib/session-edge";
+import { isSetupComplete } from "@/lib/settings";
 
 // Routes that require a valid session entirely (not even viewable)
-const AUTH_ONLY_PREFIXES = ["/sync", "/api/sync", "/link", "/logout"];
+const AUTH_ONLY_PREFIXES = [
+  "/sync",
+  "/api/sync",
+  "/link",
+  "/logout",
+  "/settings",
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip the login page and all auth API calls
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/auth")) {
+  if (pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
+
+  const setupComplete = await isSetupComplete();
+  if (!setupComplete) {
+    if (pathname.startsWith("/welcome")) return NextResponse.next();
+    const url = request.nextUrl.clone();
+    url.pathname = "/welcome";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  if (pathname.startsWith("/welcome")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
+  }
+
+  if (pathname.startsWith("/login")) return NextResponse.next();
 
   const session = await getSessionFromRequest(request);
 

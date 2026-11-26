@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Manga List – Tsuki Anime" };
 export const dynamic = "force-dynamic";
 
 export default async function MangaListPage() {
-  const title = getLibraryPageTitle("manga", "list");
+  const title = await getLibraryPageTitle("manga", "list");
   let items: Awaited<ReturnType<typeof getMangaListSnapshot>>["items"] = [];
   let counts: Awaited<ReturnType<typeof getMangaListSnapshot>>["counts"] = {};
   let isAuthenticated = false;
