@@ -1,19 +1,24 @@
-name: Build & Test
+name: CI
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Validate every PR, including documentation-only changes.
   pull_request:
     branches: ["main", "develop", "release/**"]
-    paths-ignore: ["**.md"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+# Keep only the latest validation for each PR. Manual runs stay independent.
+concurrency:
+  group: pr-validation-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
+    name: CI
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -25,12 +30,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
         with:
-          version: 12.12.1
+          version: 12.20.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: "24"
+          node-version: "26"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -42,13 +47,12 @@ jobs:
       - name: Check dependencies
         run: pnpm knip:deps
 
+      - name: Test Anime regressions
+        run: pnpm test
+
       - name: Build package (to confirm building works)
         run: pnpm build
         env:
           BETTER_AUTH_SECRET: "ci-build-only-secret-not-for-production-000000000000"
           POSTGRES_URL: ""
           POSTGRES_URL_NON_POOLING: ""
-
-      # No tests yet
-      # - name: Run tests
-      #   run: pnpm test

@@ -1,6 +1,5 @@
 # Tsuki Media
 
-
 Tsuki Media is a pnpm monorepo for personal media collections.
 
 ## Let poor Neon sleep!
@@ -30,16 +29,13 @@ Neon. Browser components continue to fetch supplemental provider information
 (genres, streaming links, related titles). This change does not migrate or remove
 database records.
 
-
-
-
 ## Applications
 
-| App | Development URL | Documentation |
-| --- | --- | --- |
-| Anime and manga | http://localhost:3000 | [apps/anime](apps/anime/README.md) |
-| Books | http://localhost:3001 | [apps/books](apps/books/README.md) |
-| Movies | http://localhost:3002 | [apps/movies](apps/movies/README.md) |
+| App             | Development URL       | Documentation                        |
+| --------------- | --------------------- | ------------------------------------ |
+| Anime and manga | http://localhost:3000 | [apps/anime](apps/anime/README.md)   |
+| Books           | http://localhost:3001 | [apps/books](apps/books/README.md)   |
+| Movies          | http://localhost:3002 | [apps/movies](apps/movies/README.md) |
 
 Shared provider clients and UI components live in `packages/providers` and
 `packages/ui`.

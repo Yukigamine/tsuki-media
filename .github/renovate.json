@@ -2,7 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "minimumReleaseAge": "14 days",
+  "baseBranchPatterns": ["develop", "main"],
   "packageRules": [
+    {
+      "description": "Rebase ordinary develop updates only when conflicted.",
+      "matchBaseBranches": ["develop"],
+      "matchJsonata": ["$not(isVulnerabilityAlert = true)"],
+      "rebaseWhen": "conflicted"
+    },
     {
       "matchManagers": ["npm"],
       "rangeStrategy": "pin"
@@ -12,8 +19,38 @@
       "rangeStrategy": "replace"
     },
     {
+      "matchBaseBranches": ["develop"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
+    },
+    {
+      "description": "Batch routine Knip and test-tool patches once a week on develop.",
+      "matchBaseBranches": ["develop"],
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchPackageNames": [
+        "knip",
+        "vitest",
+        "@vitest/coverage-v8",
+        "@testing-library/jest-dom",
+        "@testing-library/react",
+        "happy-dom"
+      ],
+      "matchUpdateTypes": ["patch"],
+      "matchJsonata": ["$not(isVulnerabilityAlert = true)"],
+      "groupName": "weekly dev-tool patches",
+      "groupSlug": "weekly-dev-tool-patches",
+      "timezone": "Etc/UTC",
+      "schedule": ["* * * * 1"],
+      "updateNotScheduled": false
+    },
+    {
+      "description": "Wait for Dependency Dashboard approval before opening ordinary major updates on develop.",
+      "matchBaseBranches": ["develop"],
+      "matchUpdateTypes": ["major"],
+      "matchJsonata": ["$not(isVulnerabilityAlert = true)"],
+      "dependencyDashboardApproval": true,
+      "automerge": false
     },
     {
       "matchPackageNames": ["@biomejs/biome"],
@@ -31,6 +68,12 @@
       "matchUpdateTypes": ["minor"],
       "automerge": false,
       "reviewers": ["Yukigamine"]
+    },
+    {
+      "description": "Keep ordinary updates on develop; production receives vulnerability fixes only.",
+      "matchBaseBranches": ["main"],
+      "matchPackageNames": ["*"],
+      "enabled": false
     }
   ],
   "osvVulnerabilityAlerts": true,

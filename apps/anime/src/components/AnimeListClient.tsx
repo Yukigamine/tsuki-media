@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Grid, Typography } from "@mui/material";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import type { AnimeListEntry } from "@/generated/prisma/client";
 import type { AnimeWithEntry } from "@/lib/list";
 import { getAnimeDetailPath } from "@/lib/media-routing";
@@ -47,31 +47,18 @@ export default function AnimeListClient({
   const [selected, setSelected] = useState<AnimeWithEntry | null>(null);
   const [localItems, setLocalItems] = useState<AnimeWithEntry[]>(items);
   const [isPending, startTransition] = useTransition();
-  const tabCacheRef = useRef<Record<StatusTab, AnimeWithEntry[]>>(
-    {} as Record<StatusTab, AnimeWithEntry[]>,
-  );
 
   useEffect(() => {
     setLocalItems(items);
   }, [items]);
 
-  useEffect(() => {
-    const cache: Record<StatusTab, AnimeWithEntry[]> = {} as Record<
-      StatusTab,
-      AnimeWithEntry[]
-    >;
-    TABS.forEach(({ value: tab }) => {
-      if (tab === "ALL") {
-        cache[tab] = localItems;
-      } else {
-        cache[tab] = localItems.filter((i) => i.listEntry?.watchStatus === tab);
-      }
-    });
-    tabCacheRef.current = cache;
-  }, [localItems]);
-
   const filtered = useMemo(() => {
-    let list = tabCacheRef.current[activeTab] ?? localItems;
+    let list =
+      activeTab === "ALL"
+        ? localItems
+        : localItems.filter(
+            (item) => item.listEntry?.watchStatus === activeTab,
+          );
     const q = search.trim().toLowerCase();
     if (q) {
       list = list.filter(

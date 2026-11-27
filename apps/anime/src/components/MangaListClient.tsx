@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Grid, Typography } from "@mui/material";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import type { MangaListEntry } from "@/generated/prisma/client";
 import type { MangaWithEntry } from "@/lib/list";
 import { getMangaDetailPath } from "@/lib/media-routing";
@@ -47,31 +47,16 @@ export default function MangaListClient({
   const [selected, setSelected] = useState<MangaWithEntry | null>(null);
   const [localItems, setLocalItems] = useState<MangaWithEntry[]>(items);
   const [isPending, startTransition] = useTransition();
-  const tabCacheRef = useRef<Record<StatusTab, MangaWithEntry[]>>(
-    {} as Record<StatusTab, MangaWithEntry[]>,
-  );
 
   useEffect(() => {
     setLocalItems(items);
   }, [items]);
 
-  useEffect(() => {
-    const cache: Record<StatusTab, MangaWithEntry[]> = {} as Record<
-      StatusTab,
-      MangaWithEntry[]
-    >;
-    TABS.forEach(({ value: tab }) => {
-      if (tab === "ALL") {
-        cache[tab] = localItems;
-      } else {
-        cache[tab] = localItems.filter((i) => i.listEntry?.readStatus === tab);
-      }
-    });
-    tabCacheRef.current = cache;
-  }, [localItems]);
-
   const filtered = useMemo(() => {
-    let list = tabCacheRef.current[activeTab] ?? localItems;
+    let list =
+      activeTab === "ALL"
+        ? localItems
+        : localItems.filter((item) => item.listEntry?.readStatus === activeTab);
     const q = search.trim().toLowerCase();
     if (q) {
       list = list.filter(

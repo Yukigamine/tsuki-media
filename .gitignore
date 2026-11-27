@@ -45,3 +45,6 @@ apps/anime/public/workbox-*.js
 apps/anime/public/sw.js.map
 # Generated artifacts left by the former root app
 /src/generated/prisma
+
+# Vitest reports
+coverage/

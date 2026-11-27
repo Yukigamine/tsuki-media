@@ -59,6 +59,7 @@ Startup artwork is not a guaranteed full-screen animation or minimum-duration
 loading screen. Android creates its own launch surface from manifest assets.
 
 References:
+
 - https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
 - https://web.dev/learn/pwa/enhancements
 - https://web.dev/articles/maskable-icon
