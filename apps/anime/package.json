@@ -22,7 +22,7 @@
     "@mui/icons-material": "9.5.0",
     "@mui/material": "9.5.0",
     "@mui/material-nextjs": "9.5.0",
-    "@neondatabase/serverless": "1.2.0",
+    "@neondatabase/serverless": "1.2.1",
     "@prisma/adapter-neon": "7.10.1",
     "@prisma/client": "7.10.1",
     "@tsuki-media/ui": "workspace:*",
